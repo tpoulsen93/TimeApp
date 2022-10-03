@@ -1,5 +1,11 @@
 
-import { Employee } from "./types"
+import { Employee } from "../../../types"
+import { Action } from "./stateReducer"
+
+type ContextType = {
+  state: AppState,
+  dispatcher: React.Dispatch<Action>,
+}
 
 type AppState = {
   openEmployeeDrawer: boolean,
@@ -13,5 +19,5 @@ const initialAppState = (): AppState => {
   }
 }
 
-export type { AppState }
+export type { AppState, ContextType }
 export default initialAppState

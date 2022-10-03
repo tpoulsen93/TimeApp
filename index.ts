@@ -1,8 +1,5 @@
-import { Server } from "./backend/Server";
-import express from 'express';
-const app = express();
+
+import startServer from "./backend/server";
 
 const port = 8081;
-
-const server = new Server(app);
-server.start(port);
+startServer(port);
