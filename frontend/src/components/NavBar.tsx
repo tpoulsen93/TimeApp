@@ -4,9 +4,10 @@ import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@mui/mater
 import { Menu } from '@mui/icons-material';
 import { ReducerContext } from '../App';
 import { ReducerActions } from '../state/stateReducer';
+import theme from '../theme';
 
 const NavBar = () => {
-  const { state, dispatcher } = useContext(ReducerContext)
+  const { dispatcher } = useContext(ReducerContext)
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -19,12 +20,12 @@ const NavBar = () => {
             aria-label="menu"
             sx={{ mr: 2, display: "flex" }}
             onClick={() => dispatcher(
-              { type: ReducerActions.ToggleEmployeeDrawer, payload: !state.openEmployeeDrawer }
+              { type: ReducerActions.ToggleEmployeeDrawer, payload: true }
             )}
           >
             <Menu />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{display: "flex"}}>
+          <Typography variant="h6" component="div" sx={{display: "flex", color: theme.palette.text.primary }}>
             TP Time App
           </Typography>
           <Button color="inherit" sx={{display: "flex"}}>

@@ -4,7 +4,7 @@ import { Employee } from "../../../types"
 
 const getEmployees = async (): Promise<Employee[]> => {
   const response = await axios.get("http://localhost:8081/api/getEmployees")
-  const employees = response.data
+  const employees: Employee[] = response.data
   return employees
 }
 

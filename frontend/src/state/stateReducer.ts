@@ -3,18 +3,23 @@ import { AppState } from "./state"
 
 type Action = {
   type: ReducerActions,
-  payload: string | number | boolean
+  payload: any
 }
 
 enum ReducerActions {
+  SetEmployees = "SetEmployees",
   ToggleEmployeeDrawer = "ToggleEmployeesDrawer",
-
 }
 
 const reducer = (state: AppState, action: Action) => {
   switch (action.type) {
+    case ReducerActions.SetEmployees:
+      return {
+        ...state,
+        employees: action.payload
+      }
+
     case ReducerActions.ToggleEmployeeDrawer:
-      console.log(`Reducer: ToggleEmployeeDrawer -> ${state.openEmployeeDrawer}`)
       return {
         ...state,
         openEmployeeDrawer: !state.openEmployeeDrawer

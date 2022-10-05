@@ -12,12 +12,10 @@ type AppState = {
   employees: Employee[]
 }
 
-const initialAppState = (): AppState => {
-  return {
-    openEmployeeDrawer: false,
-    employees: [],
-  }
+const initialAppState: AppState = {
+  openEmployeeDrawer: false,
+  employees: [],
 }
 
 export type { AppState, ContextType }
-export default initialAppState
+export { initialAppState }

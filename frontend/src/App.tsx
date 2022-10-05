@@ -3,40 +3,41 @@ import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from './theme'
 import NavBar from "./components/NavBar"
-import { createContext, useEffect, useReducer, useState } from 'react'
-import initialAppState, { AppState, ContextType } from './state/state'
+import { createContext, useCallback, useEffect, useReducer } from 'react'
+import { ContextType, initialAppState } from './state/state'
 import EmployeesDrawer from './components/EmployeesDrawer'
-import {  reducer } from "./state/stateReducer"
+import {  reducer, ReducerActions } from "./state/stateReducer"
 import { getEmployees } from './requests/serverRequestManager'
-import { Employee } from '../../types'
+import FullCalendar from "@fullcalendar/react"
+import dayGridPlugin from "@fullcalendar/daygrid"
 
 const ReducerContext = createContext<ContextType>({} as ContextType)
 
 const App = () => {
-  const appState: AppState = initialAppState()
-  const [state, dispatch] = useReducer(reducer, appState)
-  const [employees, setEmployees] = useState<Employee[]>([])
+  const [state, dispatch] = useReducer(reducer, initialAppState)
 
-  // starting grabbing state data from the server
+  const initializeState = useCallback(async () => {
+    const employees = await getEmployees()
+    dispatch({ type: ReducerActions.SetEmployees, payload: employees })
+  }, [])
+
   useEffect(() => {
-    const fetchEmployees = async () => {
-      setEmployees(await getEmployees())
-    }
-    fetchEmployees()
-  }, [state.employees])
+    initializeState()
+    console.log(state)
+  }, [initializeState])
 
   const reducerContextValue = {
     state: state,
     dispatcher: dispatch,
   }
 
-  console.log(employees)
 
   return (
     <ThemeProvider theme={theme}>
       <ReducerContext.Provider value={reducerContextValue}>
         <CssBaseline />
         <NavBar />
+        <FullCalendar plugins={[dayGridPlugin]} initialView="dayGridMonth" />
         {state.openEmployeeDrawer && <EmployeesDrawer />}
       </ReducerContext.Provider>
     </ThemeProvider>
