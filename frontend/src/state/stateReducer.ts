@@ -1,4 +1,5 @@
 
+import { Employee } from "../../../types"
 import { AppState } from "./state"
 
 type Action = {
@@ -7,17 +8,34 @@ type Action = {
 }
 
 enum ReducerActions {
+  SetSelectedEmployee = "SetSelectedEmployee",
   SetEmployees = "SetEmployees",
   ToggleEmployeeDrawer = "ToggleEmployeesDrawer",
+  // AddEmployeesHours = "AddEmployeesHours",
 }
 
 const reducer = (state: AppState, action: Action) => {
   switch (action.type) {
-    case ReducerActions.SetEmployees:
+    case ReducerActions.SetSelectedEmployee:
+      const employee: Employee = action.payload
       return {
         ...state,
-        employees: action.payload
+        selectedEmployee: employee
       }
+
+    case ReducerActions.SetEmployees:
+      const employees: Employee[] = action.payload
+      employees.forEach((employee) => employee.hours = new Map<string, number>())
+      return {
+        ...state,
+        employees: employees
+      }
+
+    // case ReducerActions.AddEmployeesHours:
+    //   const hours: HourRow[] = action.payload
+    //   hours.forEach((row: HourRow) =>
+    //     state?.employees.find((employee) => employee.id === row.id).hours.set(row.date, row.hours)
+    //   )
 
     case ReducerActions.ToggleEmployeeDrawer:
       return {

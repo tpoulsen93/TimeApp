@@ -1,9 +1,11 @@
-import {Express, Request, Response} from "express";
-import express from "express";
+import express, {Express, Request, Response} from "express";
+import { config as configureDotenv } from "dotenv"
 import * as path from "path";
 import { Pool } from "pg"
-import { config as configureDotenv } from "dotenv"
+import cors from "cors"
+import { getEmployees, getHoursByMonth } from "./dbRequestManager";
 import { initState } from "./state"
+import { HourRow } from "types";
 
 const startServer = async (port: number) => {
   configureDotenv()
@@ -18,15 +20,27 @@ const startServer = async (port: number) => {
   const state = await initState(pool)
 
   app.use(express.static(path.resolve("./") + "/build/frontend"));
+  app.use(cors())
 
   app.get("/api", (request: Request, response: Response): void => {
     response.send("Poulsen Concrete Contractors Inc.");
     console.log("/api")
   });
 
-  app.get("/api/getEmployees", (req: Request, response: Response) => {
-    response.send(state.employees)
+  app.get("/api/employees", async (request: Request, response: Response) => {
     console.log("/api/getEmployees")
+    if (state.employees.length === 0)
+      state.employees = await getEmployees(await pool.connect())
+
+    response.send(state.employees)
+  })
+
+  app.get("/api/employees/hours/month", async (request: Request, response: Response) => {
+    console.log("/api/employees/hours/month")
+    const hours: HourRow[] =
+      await getHoursByMonth(await pool.connect(), Number(request.query.month), Number(request.query.year))
+
+    response.send(hours)
   })
 
   app.get("*", (request: Request, response: Response): void => {

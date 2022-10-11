@@ -1,6 +1,7 @@
 
 import { PoolClient } from "pg";
-import { Employee } from "../types"
+import { getMonthStart, getNextMonthStart } from "./common"
+import { Employee, HourRow } from "../types"
 
 const getEmployees = async (client: PoolClient): Promise<Employee[]> => {
   const response = await client.query('SELECT * FROM employees')
@@ -21,4 +22,13 @@ const getEmployees = async (client: PoolClient): Promise<Employee[]> => {
   return employees
 }
 
-export { getEmployees }
+const getHoursByMonth = async (client: PoolClient, month: number, year: number) => {
+  const response = await client.query(
+    `SELECT id, date, time as hours FROM payroll
+    WHERE date >= '${getMonthStart(month, year)}'AND date < '${getNextMonthStart(month, year)}'`
+  )
+
+  return response.rows as HourRow[]
+}
+
+export { getEmployees, getHoursByMonth }

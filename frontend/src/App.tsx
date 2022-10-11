@@ -1,44 +1,52 @@
 
-import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
-import theme from './theme'
-import NavBar from "./components/NavBar"
-import { createContext, useCallback, useEffect, useReducer } from 'react'
+import { createContext, useEffect, useReducer } from 'react'
+import {  reducer, ReducerActions } from "./state/stateReducer"
+import { getEmployees, getEmployeesHoursByMonth } from './requests/serverRequestManager'
 import { ContextType, initialAppState } from './state/state'
 import EmployeesDrawer from './components/EmployeesDrawer'
-import {  reducer, ReducerActions } from "./state/stateReducer"
-import { getEmployees } from './requests/serverRequestManager'
-import FullCalendar from "@fullcalendar/react"
-import dayGridPlugin from "@fullcalendar/daygrid"
+import TimeCalendar from './components/calendar/TimeCalendar'
+import NavBar from "./components/NavBar"
+import theme from './theme'
+
 
 const ReducerContext = createContext<ContextType>({} as ContextType)
 
 const App = () => {
-  const [state, dispatch] = useReducer(reducer, initialAppState)
+  const [state, dispatch] = useReducer(reducer, initialAppState())
 
-  const initializeState = useCallback(async () => {
-    const employees = await getEmployees()
-    dispatch({ type: ReducerActions.SetEmployees, payload: employees })
-  }, [])
 
   useEffect(() => {
+    const initializeState = async () => {
+      console.log("initializeState()")
+      const employees = await getEmployees()
+
+      const today = new Date()
+      const currentMonthHours = await getEmployeesHoursByMonth(today.getMonth() + 1, today.getFullYear())
+
+      currentMonthHours.forEach((row) => employees.find((employee) => employee.id === row.id)?.hours.set(row.date, row.hours))
+
+      dispatch({ type: ReducerActions.SetEmployees, payload: employees })
+    }
+
     initializeState()
-    console.log(state)
-  }, [initializeState])
+  }, [])
 
   const reducerContextValue = {
     state: state,
     dispatcher: dispatch,
   }
 
-
   return (
     <ThemeProvider theme={theme}>
       <ReducerContext.Provider value={reducerContextValue}>
-        <CssBaseline />
-        <NavBar />
-        <FullCalendar plugins={[dayGridPlugin]} initialView="dayGridMonth" />
-        {state.openEmployeeDrawer && <EmployeesDrawer />}
+        <div style={{ backgroundColor: theme.palette.primary.main }}>
+          <NavBar selectedEmployee={state.selectedEmployee}/>
+          <TimeCalendar state={state} />
+          {state.openEmployeeDrawer &&
+            <EmployeesDrawer employees={state.employees} isOpen={state.openEmployeeDrawer} />
+          }
+        </div>
       </ReducerContext.Provider>
     </ThemeProvider>
   );

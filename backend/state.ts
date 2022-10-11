@@ -1,10 +1,10 @@
 
 import { Pool } from "pg"
-import { Employee } from "../types"
-import { getEmployees } from "./dbRequestManager"
+import { Employee, HourRow } from "../types"
+import { getEmployees, getHoursByMonth } from "./dbRequestManager"
 
 type ServerState = {
-  employees: Employee[]
+  employees: Employee[],
 }
 
 const initialState: ServerState = {
@@ -14,6 +14,7 @@ const initialState: ServerState = {
 const initState = async (pool: Pool) => {
   const state = initialState
 
+  // get all the employees and their info from the db
   state.employees = await getEmployees(await pool.connect())
 
   return state

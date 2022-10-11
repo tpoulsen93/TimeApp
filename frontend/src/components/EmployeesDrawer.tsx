@@ -1,33 +1,42 @@
 
 import { Divider, Drawer, List, ListItem, ListItemButton, Toolbar } from "@mui/material"
-import { useContext } from "react"
-import { ReducerContext } from "../App"
-import { capitalizeWord } from "../helpers/common"
+import React, { useContext } from "react"
 import { ReducerActions } from "../state/stateReducer"
+import { ReducerContext } from "../App"
 import theme from "../theme"
+import { Employee } from "../../../types"
 
-const EmployeesDrawer = () => {
-  const { state, dispatcher } = useContext(ReducerContext)
+const EmployeesDrawer = (props: { employees: Employee[], isOpen: boolean }) => {
+  const { employees, isOpen } = props
+  const { dispatcher } = useContext(ReducerContext)
 
   return (
     <Drawer
       anchor="left"
-      open={state.openEmployeeDrawer}
+      open={isOpen}
       onClose={() => dispatcher(
         { type: ReducerActions.ToggleEmployeeDrawer, payload: false}
       )}
-      sx={{ width: 300 }}
     >
       <Toolbar sx={{ backgroundColor: theme.palette.primary.main, fontSize: 18, justifyContent: "center" }}>
         Employees
       </Toolbar>
       <Divider variant="middle" />
       <List sx={{ backgroundColor: theme.palette.primary.main }}>
-        {state.employees.length > 0 && (
-          state.employees.map((employee) =>
+        <ListItem>
+          <ListItemButton onClick={() =>
+            dispatcher({ type: ReducerActions.SetSelectedEmployee, payload: null })
+          }>
+            None
+          </ListItemButton>
+        </ListItem>
+        {employees.length > 0 && (
+          employees.map((employee) =>
             <ListItem key={employee.id} sx={{ color: "white" }}>
-              <ListItemButton>
-                {capitalizeWord(employee.firstName) + " " + capitalizeWord(employee.lastName)}
+              <ListItemButton onClick={() =>
+                dispatcher({ type: ReducerActions.SetSelectedEmployee, payload: employee })
+              }>
+                {employee.fullName + ": " + employee.id}
               </ListItemButton>
             </ListItem>
           )

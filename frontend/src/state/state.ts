@@ -9,12 +9,18 @@ type ContextType = {
 
 type AppState = {
   openEmployeeDrawer: boolean,
-  employees: Employee[]
+  employees: Employee[],
+  selectedEmployee: Employee | null,
 }
 
-const initialAppState: AppState = {
-  openEmployeeDrawer: false,
-  employees: [],
+const initialAppState = (): AppState => {
+  const state: AppState = {
+    openEmployeeDrawer: false,
+    employees: [],
+    selectedEmployee: null
+  }
+
+  return state
 }
 
 export type { AppState, ContextType }
