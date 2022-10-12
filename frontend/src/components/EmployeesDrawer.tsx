@@ -6,7 +6,7 @@ import { ReducerContext } from "../App"
 import theme from "../theme"
 import { Employee } from "../../../types"
 
-const EmployeesDrawer = (props: { employees: Employee[], isOpen: boolean }) => {
+const EmployeesDrawer = (props: { employees: { [id: number]: Employee }, isOpen: boolean }) => {
   const { employees, isOpen } = props
   const { dispatcher } = useContext(ReducerContext)
 
@@ -30,17 +30,16 @@ const EmployeesDrawer = (props: { employees: Employee[], isOpen: boolean }) => {
             None
           </ListItemButton>
         </ListItem>
-        {employees.length > 0 && (
-          employees.map((employee) =>
-            <ListItem key={employee.id} sx={{ color: "white" }}>
-              <ListItemButton onClick={() =>
+        {Object.values(employees).map((employee) =>
+          <ListItem key={employee.id} sx={{ color: "white" }}>
+            <ListItemButton
+              onClick={() =>
                 dispatcher({ type: ReducerActions.SetSelectedEmployee, payload: employee })
-              }>
-                {employee.fullName + ": " + employee.id}
-              </ListItemButton>
-            </ListItem>
-          )
-        )}
+              }
+            >
+              {employee.fullName + ": " + employee.id}
+            </ListItemButton>
+          </ListItem>)}
       </List>
     </Drawer>
   )

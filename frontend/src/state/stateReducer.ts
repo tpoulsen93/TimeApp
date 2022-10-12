@@ -1,5 +1,5 @@
 
-import { Employee } from "../../../types"
+import { Employee, HourRow } from "../../../types"
 import { AppState } from "./state"
 
 type Action = {
@@ -9,39 +9,58 @@ type Action = {
 
 enum ReducerActions {
   SetSelectedEmployee = "SetSelectedEmployee",
-  SetEmployees = "SetEmployees",
+  AddEmployee = "AddEmployee",
   ToggleEmployeeDrawer = "ToggleEmployeesDrawer",
-  // AddEmployeesHours = "AddEmployeesHours",
+  AddEmployeesHours = "AddEmployeesHours",
 }
 
 const reducer = (state: AppState, action: Action) => {
   switch (action.type) {
-    case ReducerActions.SetSelectedEmployee:
+    case ReducerActions.SetSelectedEmployee: {
+      // payload: employee: Employee
       const employee: Employee = action.payload
       return {
         ...state,
         selectedEmployee: employee
       }
+    }
 
-    case ReducerActions.SetEmployees:
-      const employees: Employee[] = action.payload
-      employees.forEach((employee) => employee.hours = new Map<string, number>())
+    case ReducerActions.AddEmployee: {
+      // payload: { id: number, employee: Employee }
+      const employee: Employee = action.payload.employee
+      const id: number = action.payload.id
+
+      // initialize the hours map
+      employee.hours = new Map<string, number>()
+
+      const employees = state.employees
+      employees[id] = employee
+
       return {
         ...state,
         employees: employees
       }
+    }
 
-    // case ReducerActions.AddEmployeesHours:
-    //   const hours: HourRow[] = action.payload
-    //   hours.forEach((row: HourRow) =>
-    //     state?.employees.find((employee) => employee.id === row.id).hours.set(row.date, row.hours)
-    //   )
+    case ReducerActions.AddEmployeesHours: {
+      // payload: hours: HourRow[]
+      const hours: HourRow[] = action.payload
+      const employees = state.employees
 
-    case ReducerActions.ToggleEmployeeDrawer:
+      hours.forEach((row) => employees[row.id].hours.set(row.date.slice(0, 10), row.hours))
+
+      return {
+        ...state,
+        employees: employees
+      }
+    }
+
+    case ReducerActions.ToggleEmployeeDrawer: {
       return {
         ...state,
         openEmployeeDrawer: !state.openEmployeeDrawer
       }
+    }
 
     default:
       return state

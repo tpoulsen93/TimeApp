@@ -5,7 +5,7 @@ import { AppState } from "../../state/state"
 import TileContent from "./TileContent"
 
 const TimeCalendar = (props: { state: AppState }) => {
-  // const { state } = props
+  const { state } = props
 
 
 
@@ -17,6 +17,7 @@ const TimeCalendar = (props: { state: AppState }) => {
             day={date.getDate()}
             month={date.getMonth()}
             year={date.getFullYear()}
+            selectedEmployee={state.selectedEmployee}
           />
         }
       />

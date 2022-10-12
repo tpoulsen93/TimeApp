@@ -19,17 +19,21 @@ const App = () => {
   useEffect(() => {
     const initializeState = async () => {
       console.log("initializeState()")
+
+      // add all the employees to the state
       const employees = await getEmployees()
+      employees.forEach((employee) =>
+        dispatch({ type: ReducerActions.AddEmployee, payload: { id: employee.id, employee: employee } })
+      )
 
+      // add all the hours to the employees
       const today = new Date()
-      const currentMonthHours = await getEmployeesHoursByMonth(today.getMonth() + 1, today.getFullYear())
-
-      currentMonthHours.forEach((row) => employees.find((employee) => employee.id === row.id)?.hours.set(row.date, row.hours))
-
-      dispatch({ type: ReducerActions.SetEmployees, payload: employees })
+      const hours = await getEmployeesHoursByMonth(today.getMonth() + 1, today.getFullYear())
+      dispatch({ type: ReducerActions.AddEmployeesHours, payload: hours })
     }
 
     initializeState()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const reducerContextValue = {
