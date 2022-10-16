@@ -9,7 +9,7 @@ import TimeCalendar from './components/calendar/TimeCalendar'
 import NavBar from "./components/NavBar"
 import theme from './theme'
 import { Box } from '@mui/material'
-// import 'react-calendar/dist/Calendar.css';
+import './helpers/calendar.css';
 
 
 const ReducerContext = createContext<ContextType>({} as ContextType)
@@ -30,7 +30,16 @@ const App = () => {
 
       // add all the hours to the employees
       const today = new Date()
-      const hours = await getEmployeesHoursByMonth(today.getMonth() + 1, today.getFullYear())
+      const thisMonth = today.getMonth() + 1
+      const thisYear = today.getFullYear()
+      const lastMonth = thisMonth === 1 ? 12 : thisMonth - 1
+      const lastMonthsYear = thisMonth === 1 ? thisYear - 1 : thisYear
+
+      let hours = [
+        ...await getEmployeesHoursByMonth(thisMonth, thisYear),
+        ...await getEmployeesHoursByMonth(lastMonth, lastMonthsYear)
+      ]
+
       dispatch({ type: ReducerActions.AddEmployeesHours, payload: hours })
     }
 

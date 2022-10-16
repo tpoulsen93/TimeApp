@@ -1,7 +1,6 @@
 
 import { makeStyles } from "@mui/styles"
 import { Calendar } from "react-calendar"
-// import { Calendar } from "react-calendar"
 import { AppState } from "../../state/state"
 import theme from "../../theme"
 import TileContent from "./TileContent"
@@ -13,9 +12,9 @@ const text = theme.palette.text.primary
 
 const useStyles = makeStyles({
   calendar: {
-    color: text,
+    color: primary,
     width: "90%",
-    margin: "24px",
+    marginTop: "24px",
   },
   tiles: {
     backgroundColor: secondary,
@@ -39,6 +38,7 @@ const TimeCalendar = (props: { state: AppState }) => {
             day={date.getDate()}
             month={date.getMonth()}
             year={date.getFullYear()}
+            employees={state.employees}
             selectedEmployee={state.selectedEmployee}
           />
         }

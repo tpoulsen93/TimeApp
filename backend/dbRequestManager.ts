@@ -18,7 +18,6 @@ const getEmployees = async (client: PoolClient): Promise<Employee[]> => {
       } as Employee
     })
 
-  employees.sort((e1, e2) => e1.lastName.localeCompare(e2.lastName))
   return employees
 }
 

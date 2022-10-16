@@ -4,7 +4,7 @@ import { formatDate } from "../../helpers/common"
 
 const useStyles = makeStyles({
   tile: {
-    height: `${10}vh`,
+    height: `${8}vh`,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -12,12 +12,23 @@ const useStyles = makeStyles({
   },
 })
 
-const TileContent = (props: { day: number, month: number, year: number, selectedEmployee: Employee | null }) => {
-  const { day, month, year, selectedEmployee } = props
+const TileContent = (props: {
+  day: number,
+  month: number,
+  year: number,
+  employees: Record<number, Employee>,
+  selectedEmployee: Employee | null
+}) => {
+  const { day, month, year, employees, selectedEmployee } = props
 
   const classes = useStyles()
 
-  const hours = selectedEmployee?.hours.get(formatDate(day, month+1, year)) ?? 0
+  const hours = selectedEmployee
+    ? selectedEmployee.hours.get(formatDate(day, month+1, year)) ?? 0
+    : Object.values(employees).reduce(
+        (sum, employee) => sum + (employee.hours.get(formatDate(day, month+1, year)) ?? 0),
+        0
+      )
 
   return (
     <div className={classes.tile}>
