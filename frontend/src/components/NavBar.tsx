@@ -31,7 +31,7 @@ const NavBar = (props: { selectedEmployee: Employee | null }) => {
           >
             <Menu />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: theme.palette.text.primary }}>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
             TP Time App
           </Typography>
           <Button color="inherit" sx={{ display: "flex", justifySelf: "flex-end" }}>

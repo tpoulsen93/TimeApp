@@ -8,6 +8,8 @@ import EmployeesDrawer from './components/EmployeesDrawer'
 import TimeCalendar from './components/calendar/TimeCalendar'
 import NavBar from "./components/NavBar"
 import theme from './theme'
+import { Box } from '@mui/material'
+// import 'react-calendar/dist/Calendar.css';
 
 
 const ReducerContext = createContext<ContextType>({} as ContextType)
@@ -44,13 +46,15 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <ReducerContext.Provider value={reducerContextValue}>
-        <div style={{ backgroundColor: theme.palette.primary.main }}>
+        <Box sx={{ backgroundColor: theme.palette.primary.main, margin: "-8px", height: "100vh" }}>
           <NavBar selectedEmployee={state.selectedEmployee}/>
-          <TimeCalendar state={state} />
-          {state.openEmployeeDrawer &&
-            <EmployeesDrawer employees={state.employees} isOpen={state.openEmployeeDrawer} />
-          }
-        </div>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <TimeCalendar state={state} />
+          </Box>
+        </Box>
+        {state.openEmployeeDrawer &&
+          <EmployeesDrawer employees={state.employees} isOpen={state.openEmployeeDrawer} />
+        }
       </ReducerContext.Provider>
     </ThemeProvider>
   );
