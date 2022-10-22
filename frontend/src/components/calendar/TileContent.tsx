@@ -32,7 +32,7 @@ const TileContent = (props: {
 
   return (
     <div className={classes.tile}>
-      {hours > 0 ? `${hours} hours` : ""}
+      {hours > 0 ? `${hours.toString().slice(0, 5)} hours` : ""}
     </div>
   )
 }
