@@ -11,13 +11,15 @@ type AppState = {
   openEmployeeDrawer: boolean,
   employees: { [id: number]: Employee }
   selectedEmployee: Employee | null,
+  calendarIsLoading: boolean,
 }
 
 const initialAppState = (): AppState => {
   const state: AppState = {
     openEmployeeDrawer: false,
     employees: {},
-    selectedEmployee: null
+    selectedEmployee: null,
+    calendarIsLoading: true,
   }
 
   return state

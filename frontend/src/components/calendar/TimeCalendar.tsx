@@ -1,13 +1,13 @@
 
 import { useCallback, useContext } from "react"
-import { makeStyles } from "@mui/styles"
 import { Calendar } from "react-calendar"
-import { ReducerContext } from "../../App"
+import { makeStyles } from "@mui/styles"
 import { getEmployeesHoursByMonth } from "../../requests/serverRequestManager"
-import { AppState } from "../../state/state"
 import { ReducerActions } from "../../state/stateReducer"
-import theme from "../../theme"
+import { AppState } from "../../state/state"
+import { ReducerContext } from "../../App"
 import TileContent from "./TileContent"
+import theme from "../../theme"
 
 const useStyles = makeStyles({
   calendar: {

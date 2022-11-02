@@ -8,7 +8,7 @@ import EmployeesDrawer from './components/EmployeesDrawer'
 import TimeCalendar from './components/calendar/TimeCalendar'
 import NavBar from "./components/NavBar"
 import theme from './theme'
-import { Box } from '@mui/material'
+import { Box, CircularProgress, LinearProgress } from '@mui/material'
 import './helpers/calendar.css';
 
 
@@ -41,6 +41,9 @@ const App = () => {
       ]
 
       dispatch({ type: ReducerActions.AddEmployeesHours, payload: hours })
+
+      dispatch({ type: ReducerActions.setCalendarIsLoading, payload: false })
+      console.log("initialization complete")
     }
 
     initializeState()
@@ -58,7 +61,10 @@ const App = () => {
         <Box sx={{ backgroundColor: theme.palette.primary.main, margin: "-8px", height: "100vh" }}>
           <NavBar selectedEmployee={state.selectedEmployee}/>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <TimeCalendar state={state} />
+            {state.calendarIsLoading
+              ? <CircularProgress color="info"  sx={{ mt: "auto", size: 100 }}/>
+              : <TimeCalendar state={state} />
+            }
           </Box>
         </Box>
         {state.openEmployeeDrawer &&

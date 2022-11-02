@@ -12,6 +12,7 @@ enum ReducerActions {
   AddEmployee = "AddEmployee",
   ToggleEmployeeDrawer = "ToggleEmployeesDrawer",
   AddEmployeesHours = "AddEmployeesHours",
+  setCalendarIsLoading = "SetCalendarIsLoading",
 }
 
 const reducer = (state: AppState, action: Action) => {
@@ -59,6 +60,15 @@ const reducer = (state: AppState, action: Action) => {
       return {
         ...state,
         openEmployeeDrawer: !state.openEmployeeDrawer
+      }
+    }
+
+    case ReducerActions.setCalendarIsLoading: {
+      // payload: isLoading: boolean
+      const isLoading: boolean = action.payload
+      return {
+        ...state,
+        calendarIsLoading: isLoading
       }
     }
 
