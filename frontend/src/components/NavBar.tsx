@@ -1,21 +1,19 @@
-
-import { useCallback, useContext } from 'react';
 import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@mui/material';
 import { Menu, Person } from '@mui/icons-material';
-import { ReducerContext } from '../App';
-import { ReducerActions } from '../state/stateReducer';
-import theme from '../theme';
-import { Employee } from '../../../types';
+import { useContext } from 'react';
+import { StoreContext } from '..';
+import { observer } from 'mobx-react-lite';
+import { action } from 'mobx';
 
-const NavBar = (props: { selectedEmployee: Employee | null }) => {
-  const { selectedEmployee } = props
-  const { dispatcher } = useContext(ReducerContext)
+const NavBar = observer(() => {
+  const { appStore } = useContext(StoreContext)
+  const { selectedEmployee, setEmployeeDrawerIsOpen } = appStore
 
-  const currentEmployee = selectedEmployee === null ? <Person sx={{ color: "white" }} /> : selectedEmployee.fullName
+  const currentEmployee = selectedEmployee === null
+    ? <Person sx={{ color: "white" }} />
+    : selectedEmployee.fullName
 
-  const handleClick = useCallback(() =>
-    dispatcher({ type: ReducerActions.ToggleEmployeeDrawer, payload: true }), [dispatcher]
-  )
+  const handleClick = action(() => setEmployeeDrawerIsOpen(true))
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -41,6 +39,6 @@ const NavBar = (props: { selectedEmployee: Employee | null }) => {
       </AppBar>
     </Box>
   );
-}
+})
 
 export default NavBar

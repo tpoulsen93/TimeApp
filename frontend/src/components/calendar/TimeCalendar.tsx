@@ -1,13 +1,12 @@
-
-import { useCallback, useContext } from "react"
-import { Calendar } from "react-calendar"
 import { makeStyles } from "@mui/styles"
-import { getEmployeesHoursByMonth } from "../../requests/serverRequestManager"
-import { ReducerActions } from "../../state/stateReducer"
-import { AppState } from "../../state/state"
-import { ReducerContext } from "../../App"
+import { Calendar } from "react-calendar"
+import { useCallback, useContext } from "react"
+import { fetchEmployeesHoursByMonth } from "../../requests/serverRequests"
 import TileContent from "./TileContent"
+import { StoreContext } from "../.."
 import theme from "../../theme"
+import { observer } from "mobx-react-lite"
+import { action } from "mobx"
 
 const useStyles = makeStyles({
   calendar: {
@@ -22,26 +21,27 @@ const useStyles = makeStyles({
   }
 })
 
-const TimeCalendar = (props: { state: AppState }) => {
-  const { state } = props
-  const { dispatcher } = useContext(ReducerContext)
+const TimeCalendar = observer(() => {
+  const { domainStore } = useContext(StoreContext)
+  const { addEmployeeHours } = domainStore
+
   const classes = useStyles()
 
-  const handleActivateStartDateChange = useCallback(async ({ activeStartDate }: { activeStartDate: Date }) => {
-    const month = activeStartDate.getMonth() + 1
-    const year = activeStartDate.getFullYear()
-    const hours = await getEmployeesHoursByMonth(month, year)
-    dispatcher({ type: ReducerActions.AddEmployeesHours, payload: hours })
-  }, [dispatcher])
+  const handleActivateStartDateChange = action(
+    async ({ activeStartDate }: { activeStartDate: Date }) => {
+      const month = activeStartDate.getMonth() + 1
+      const year = activeStartDate.getFullYear()
+      const hours = await fetchEmployeesHoursByMonth(month, year)
+      addEmployeeHours(hours)
+    }
+  )
 
   const tileContent = useCallback(({ date }: { date: Date }) =>
     <TileContent
       day={date.getDate()}
       month={date.getMonth()}
       year={date.getFullYear()}
-      employees={state.employees}
-      selectedEmployee={state.selectedEmployee}
-    />, [state.employees, state.selectedEmployee])
+    />, [])
 
   return (
     <Calendar
@@ -52,6 +52,6 @@ const TimeCalendar = (props: { state: AppState }) => {
       tileContent={tileContent}
     />
   )
-}
+})
 
 export default TimeCalendar

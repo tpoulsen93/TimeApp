@@ -1,10 +1,9 @@
-
 import axios from "axios"
 import { Employee, HourRow } from "../../../types"
 import { capitalizeWord } from "../helpers/common"
 
-const getEmployees = async (): Promise<Employee[]> => {
-  console.log("getEmployees()")
+const fetchEmployees = async (): Promise<Employee[]> => {
+  console.log("fetchEmployees()")
   const response = await axios.get("/api/employees")
   const employees: Employee[] = response.data
   employees.forEach((employee) => {
@@ -14,11 +13,11 @@ const getEmployees = async (): Promise<Employee[]> => {
   return employees
 }
 
-const getEmployeesHoursByMonth = async (month: number, year: number): Promise<HourRow[]> => {
-  console.log("getEmployeesHoursByMonth()")
+const fetchEmployeesHoursByMonth = async (month: number, year: number): Promise<HourRow[]> => {
+  console.log("fetchEmployeesHoursByMonth()")
   const response = await axios.get("/api/employees/hours/month", { params: { month: month, year: year } })
   const hours: HourRow[] = response?.data
   return hours
 }
 
-export { getEmployees, getEmployeesHoursByMonth }
+export { fetchEmployees, fetchEmployeesHoursByMonth }

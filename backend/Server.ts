@@ -3,7 +3,7 @@ import { config as configureDotenv } from "dotenv"
 import * as path from "path";
 import { Pool } from "pg"
 import cors from "cors"
-import { getEmployees, getHoursByMonth } from "./dbRequestManager";
+import { fetchEmployees, getHoursByMonth } from "./dbRequestManager";
 import { initState } from "./state"
 import { HourRow } from "types";
 
@@ -28,9 +28,9 @@ const startServer = async (port: number) => {
   });
 
   app.get("/api/employees", async (request: Request, response: Response) => {
-    console.log("/api/getEmployees")
+    console.log("/api/fetchEmployees")
     if (state.employees.length === 0)
-      state.employees = await getEmployees(await pool.connect())
+      state.employees = await fetchEmployees(await pool.connect())
 
     response.send(state.employees)
   })

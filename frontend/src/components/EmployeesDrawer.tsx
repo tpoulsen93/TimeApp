@@ -1,30 +1,23 @@
-
+import { action } from "mobx"
+import { useContext } from "react"
+import { observer } from "mobx-react-lite"
 import { Divider, Drawer, List, ListItem, ListItemButton, Toolbar } from "@mui/material"
-import React, { useContext } from "react"
-import { ReducerActions } from "../state/stateReducer"
-import { ReducerContext } from "../App"
+import { StoreContext } from ".."
 import theme from "../theme"
-import { Employee } from "../../../types"
 
-const EmployeesDrawer = (props: { employees: { [id: number]: Employee }, isOpen: boolean }) => {
-  const { employees, isOpen } = props
-  const { dispatcher } = useContext(ReducerContext)
+const EmployeesDrawer = observer(() => {
+  const { appStore, domainStore } = useContext(StoreContext)
+  const { employeeDrawerIsOpen, setEmployeeDrawerIsOpen, setSelectedEmployee } = appStore
+  const { employees } = domainStore
 
-  const selectEmployee = (employee: Employee) => {
-    dispatcher({ type: ReducerActions.SetSelectedEmployee, payload: employee })
-  }
-
-  const deselectEmployee = () => {
-    dispatcher({ type: ReducerActions.SetSelectedEmployee, payload: null })
-  }
+  const deselectEmployee = action(() => setSelectedEmployee(null))
+  const closeEmployeeDrawer = action(() => setEmployeeDrawerIsOpen(false))
 
   return (
     <Drawer
       anchor="left"
-      open={isOpen}
-      onClose={() => dispatcher(
-        { type: ReducerActions.ToggleEmployeeDrawer, payload: false}
-      )}
+      open={employeeDrawerIsOpen}
+      onClose={closeEmployeeDrawer}
     >
       <Toolbar sx={{ backgroundColor: theme.palette.primary.main, fontSize: 18, justifyContent: "center", color: "white" }}>
         Employees
@@ -40,7 +33,7 @@ const EmployeesDrawer = (props: { employees: { [id: number]: Employee }, isOpen:
           .sort((e1, e2) => e1.lastName.localeCompare(e2.lastName))
           .map((employee) =>
             <ListItem key={employee.id} sx={{ color: "white" }}>
-              <ListItemButton onClick={() => selectEmployee(employee)}>
+              <ListItemButton onClick={action(() => setSelectedEmployee(employee))}>
                 {employee.fullName}
               </ListItemButton>
             </ListItem>
@@ -48,6 +41,6 @@ const EmployeesDrawer = (props: { employees: { [id: number]: Employee }, isOpen:
       </List>
     </Drawer>
   )
-}
+})
 
 export default EmployeesDrawer
