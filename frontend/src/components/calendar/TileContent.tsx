@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   },
 })
 
-const TileContent = observer((props: { day: number, month: number, year: number }) => {
+const TileContent = (props: { day: number, month: number, year: number }) => {
   const { day, month, year } = props
 
   const { appStore, domainStore } = useContext(StoreContext)
@@ -35,6 +35,6 @@ const TileContent = observer((props: { day: number, month: number, year: number 
       {hours > 0 ? `${hours.toString().slice(0, 5)} hours` : ""}
     </div>
   )
-})
+}
 
-export default TileContent
+export default observer(TileContent)

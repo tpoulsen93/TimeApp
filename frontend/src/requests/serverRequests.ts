@@ -14,7 +14,7 @@ const fetchEmployees = async (): Promise<Employee[]> => {
 }
 
 const fetchEmployeesHoursByMonth = async (month: number, year: number): Promise<HourRow[]> => {
-  console.log("fetchEmployeesHoursByMonth()")
+  console.log(`fetchEmployeesHoursByMonth(${month}/${year})`)
   const response = await axios.get("/api/employees/hours/month", { params: { month: month, year: year } })
   const hours: HourRow[] = response?.data
   return hours

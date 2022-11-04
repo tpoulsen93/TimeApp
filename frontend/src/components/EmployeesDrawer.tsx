@@ -5,7 +5,7 @@ import { Divider, Drawer, List, ListItem, ListItemButton, Toolbar } from "@mui/m
 import { StoreContext } from ".."
 import theme from "../theme"
 
-const EmployeesDrawer = observer(() => {
+const EmployeesDrawer = () => {
   const { appStore, domainStore } = useContext(StoreContext)
   const { employeeDrawerIsOpen, setEmployeeDrawerIsOpen, setSelectedEmployee } = appStore
   const { employees } = domainStore
@@ -41,6 +41,6 @@ const EmployeesDrawer = observer(() => {
       </List>
     </Drawer>
   )
-})
+}
 
-export default EmployeesDrawer
+export default observer(EmployeesDrawer)

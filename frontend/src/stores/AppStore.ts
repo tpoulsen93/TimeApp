@@ -1,6 +1,6 @@
 
 import { makeAutoObservable } from "mobx";
-import { Employee } from "../../../types";
+import { Employee, MonthInfo } from "../../../types";
 import { RootStore } from "./RootStore";
 
 export class AppStore {
@@ -8,6 +8,7 @@ export class AppStore {
   employeeDrawerIsOpen: boolean
   selectedEmployee: Employee | null
   calendarIsLoading: boolean
+  currentMonth: MonthInfo | null
 
   constructor(root: RootStore) {
     makeAutoObservable(this, {}, { autoBind: true })
@@ -15,6 +16,9 @@ export class AppStore {
     this.employeeDrawerIsOpen = false
     this.selectedEmployee = null
     this.calendarIsLoading = true
+    this.currentMonth = null
+
+    this.initialize()
   }
 
   setEmployeeDrawerIsOpen(isOpen: boolean) {
@@ -27,5 +31,14 @@ export class AppStore {
 
   setCalendarIsLoading(isLoading: boolean) {
     this.calendarIsLoading = isLoading
+  }
+
+  setCurrentMonth(month: number, year: number) {
+    this.currentMonth = { month: month, year: year }
+  }
+
+  private initialize() {
+    const date = new Date()
+    this.currentMonth = { month: date.getMonth() + 1, year: date.getFullYear() }
   }
 }

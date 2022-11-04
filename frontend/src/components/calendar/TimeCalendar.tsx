@@ -21,9 +21,10 @@ const useStyles = makeStyles({
   }
 })
 
-const TimeCalendar = observer(() => {
-  const { domainStore } = useContext(StoreContext)
-  const { addEmployeeHours } = domainStore
+const TimeCalendar = () => {
+  const { appStore, domainStore } = useContext(StoreContext)
+  const { addEmployeeHours, addMonthFetched } = domainStore
+  const { setCurrentMonth } = appStore
 
   const classes = useStyles()
 
@@ -31,8 +32,15 @@ const TimeCalendar = observer(() => {
     async ({ activeStartDate }: { activeStartDate: Date }) => {
       const month = activeStartDate.getMonth() + 1
       const year = activeStartDate.getFullYear()
-      const hours = await fetchEmployeesHoursByMonth(month, year)
-      addEmployeeHours(hours)
+      setCurrentMonth(month, year)
+
+      if (!domainStore.monthAlreadyFetched(month, year)) {
+        const hours = await fetchEmployeesHoursByMonth(month, year)
+        if (hours) {
+          addMonthFetched(month, year)
+          addEmployeeHours(hours)
+        }
+      }
     }
   )
 
@@ -52,6 +60,6 @@ const TimeCalendar = observer(() => {
       tileContent={tileContent}
     />
   )
-})
+}
 
-export default TimeCalendar
+export default observer(TimeCalendar)

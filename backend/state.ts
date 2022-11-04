@@ -1,6 +1,6 @@
 import { Pool } from "pg"
-import { Employee, HourRow } from "../types"
-import { fetchEmployees, getHoursByMonth } from "./dbRequestManager"
+import { Employee } from "../types"
+import { fetchEmployees } from "./dbRequestManager"
 
 type ServerState = {
   employees: Employee[],

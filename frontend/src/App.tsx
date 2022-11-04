@@ -9,10 +9,9 @@ import { StoreContext } from "./index"
 import theme from './theme'
 import './helpers/calendar.css';
 
-const App = observer(() => {
-  const { appStore, domainStore } = useContext(StoreContext)
+const App = () => {
+  const { appStore } = useContext(StoreContext)
   const { calendarIsLoading, employeeDrawerIsOpen } = appStore
-  domainStore.initialize()
 
   return (
     <ThemeProvider theme={theme}>
@@ -30,6 +29,6 @@ const App = observer(() => {
         }
     </ThemeProvider>
   );
-})
+}
 
-export default App;
+export default observer(App)

@@ -5,7 +5,7 @@ import { StoreContext } from '..';
 import { observer } from 'mobx-react-lite';
 import { action } from 'mobx';
 
-const NavBar = observer(() => {
+const NavBar = () => {
   const { appStore } = useContext(StoreContext)
   const { selectedEmployee, setEmployeeDrawerIsOpen } = appStore
 
@@ -39,6 +39,6 @@ const NavBar = observer(() => {
       </AppBar>
     </Box>
   );
-})
+}
 
-export default NavBar
+export default observer(NavBar)
