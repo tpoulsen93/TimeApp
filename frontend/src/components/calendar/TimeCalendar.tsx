@@ -1,12 +1,12 @@
 import { makeStyles } from "@mui/styles"
 import { Calendar } from "react-calendar"
 import { useCallback, useContext } from "react"
-import { fetchEmployeesHoursByMonth } from "../../requests/serverRequests"
 import TileContent from "./TileContent"
 import { StoreContext } from "../.."
 import theme from "../../theme"
 import { observer } from "mobx-react-lite"
 import { action } from "mobx"
+import { getMonthInfo, getPreviousMonthInfo } from "../../helpers/common"
 
 const useStyles = makeStyles({
   calendar: {
@@ -22,25 +22,21 @@ const useStyles = makeStyles({
 })
 
 const TimeCalendar = () => {
-  const { appStore, domainStore } = useContext(StoreContext)
-  const { addEmployeeHours, addMonthFetched } = domainStore
-  const { setCurrentMonth } = appStore
+  const { domainStore } = useContext(StoreContext)
+  const { fetchHoursByMonth, setCurrentMonth } = domainStore
 
   const classes = useStyles()
 
   const handleActivateStartDateChange = action(
-    async ({ activeStartDate }: { activeStartDate: Date }) => {
-      const month = activeStartDate.getMonth() + 1
-      const year = activeStartDate.getFullYear()
-      setCurrentMonth(month, year)
+    ({ activeStartDate }: { activeStartDate: Date }) => {
+      const monthInfo = getMonthInfo(activeStartDate.getMonth() + 1, activeStartDate.getFullYear())
+      const previousMonthInfo = getPreviousMonthInfo(monthInfo)
+      setCurrentMonth(monthInfo)
 
-      if (!domainStore.monthAlreadyFetched(month, year)) {
-        const hours = await fetchEmployeesHoursByMonth(month, year)
-        if (hours) {
-          addMonthFetched(month, year)
-          addEmployeeHours(hours)
-        }
-      }
+      if (!domainStore.monthAlreadyFetched(monthInfo))
+        fetchHoursByMonth(monthInfo)
+      if (!domainStore.monthAlreadyFetched(previousMonthInfo))
+        fetchHoursByMonth(previousMonthInfo)
     }
   )
 

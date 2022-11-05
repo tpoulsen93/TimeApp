@@ -36,9 +36,10 @@ const startServer = async (port: number) => {
   })
 
   app.get("/api/employees/hours/month", async (request: Request, response: Response) => {
-    console.log("/api/employees/hours/month")
+    const { month, year } = request.query
+    console.log(`/api/employees/hours/month -> ${month}/${year}`)
     const hours: HourRow[] =
-      await getHoursByMonth(await pool.connect(), Number(request.query.month), Number(request.query.year))
+      await getHoursByMonth(await pool.connect(), Number(month), Number(year))
 
     response.send(hours)
   })
