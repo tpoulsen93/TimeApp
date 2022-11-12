@@ -7,11 +7,11 @@ import theme from "../theme"
 
 const EmployeesDrawer = () => {
   const { appStore, domainStore } = useContext(StoreContext)
-  const { employeeDrawerIsOpen, setEmployeeDrawerIsOpen, setSelectedEmployee } = appStore
+  const { employeeDrawerIsOpen, setSelectedEmployee, setEmployeeDrawerIsOpen } = appStore
   const { employees } = domainStore
 
-  const deselectEmployee = action(() => setSelectedEmployee(null))
   const closeEmployeeDrawer = action(() => setEmployeeDrawerIsOpen(false))
+  const deselectEmployee = action(() => setSelectedEmployee(null))
 
   return (
     <Drawer

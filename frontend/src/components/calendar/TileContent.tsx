@@ -1,8 +1,9 @@
 import { makeStyles } from "@mui/styles"
 import { observer } from "mobx-react-lite"
+import { Typography } from "@mui/material"
+import { useContext } from "react"
 import { formatDate } from "../../helpers/common"
 import { StoreContext } from "../.."
-import { useContext } from "react"
 
 const useStyles = makeStyles({
   tile: {
@@ -18,8 +19,8 @@ const TileContent = (props: { day: number, month: number, year: number }) => {
   const { day, month, year } = props
 
   const { appStore, domainStore } = useContext(StoreContext)
-  const { selectedEmployee } = appStore
   const { employees } = domainStore
+  const { selectedEmployee } = appStore
 
   const classes = useStyles()
 
@@ -32,7 +33,7 @@ const TileContent = (props: { day: number, month: number, year: number }) => {
 
   return (
     <div className={classes.tile}>
-      {hours > 0 ? `${hours.toString().slice(0, 5)} hours` : ""}
+      <Typography>{hours > 0 ? `${hours.toString().slice(0, 5)} hours` : ""}</Typography>
     </div>
   )
 }

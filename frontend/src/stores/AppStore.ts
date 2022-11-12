@@ -5,18 +5,20 @@ import { RootStore } from "./RootStore";
 
 export class AppStore {
   root: RootStore
-  employeeDrawerIsOpen: boolean
-  selectedEmployee: Employee | null
   calendarIsLoading: boolean
+  employeeDrawerIsOpen: boolean
+  optionsAnchorEl: HTMLButtonElement | null
+  selectedDate: Date | null
+  selectedEmployee: Employee | null
 
   constructor(root: RootStore) {
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this, { root: false }, { autoBind: true })
     this.root = root
-    this.employeeDrawerIsOpen = false
-    this.selectedEmployee = null
     this.calendarIsLoading = true
-
-    this.initialize()
+    this.employeeDrawerIsOpen = false
+    this.optionsAnchorEl = null
+    this.selectedDate = null
+    this.selectedEmployee = null
   }
 
   setEmployeeDrawerIsOpen(isOpen: boolean) {
@@ -31,5 +33,11 @@ export class AppStore {
     this.calendarIsLoading = isLoading
   }
 
-  private initialize() {}
+  setOptionsAnchorEl(element: HTMLButtonElement | null) {
+    this.optionsAnchorEl = element
+  }
+
+  setSelectedDate(date: Date | null) {
+    this.selectedDate = date
+  }
 }

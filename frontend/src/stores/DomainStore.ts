@@ -1,9 +1,8 @@
 import { makeAutoObservable } from "mobx";
-import { fetchEmployees } from "../requests/serverRequests";
-import { getCurrentMonthInfo, getPreviousMonthInfo } from "../helpers/common";
+import { getCurrentMonthInfo, getPreviousMonthInfo, monthsAreTheSame } from "../helpers/common";
+import { fetchEmployees, fetchHoursByMonth } from "../requests/serverRequests";
 import { Employee, HourRow, MonthInfo } from "../../../types";
 import { RootStore } from "./RootStore";
-import axios from "axios";
 
 export class DomainStore {
   root: RootStore
@@ -12,12 +11,11 @@ export class DomainStore {
   currentMonth: MonthInfo
 
   constructor(root: RootStore) {
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this, { root: false }, { autoBind: true })
     this.root = root
     this.employees = {}
     this.monthsFetched = []
     this.currentMonth = {} as MonthInfo
-
 
     this.initialize()
   }
@@ -35,21 +33,16 @@ export class DomainStore {
   }
 
   monthAlreadyFetched(monthInfo: MonthInfo): boolean {
-    const { month, year } = monthInfo
-    return this.monthsFetched.some((mi) => mi.month === month && mi.year === year)
+    return this.monthsFetched.some((mi) => monthsAreTheSame(monthInfo, mi))
   }
 
-  *fetchHoursByMonth(monthInfo: MonthInfo): any {
-    if (!this.monthAlreadyFetched(monthInfo)) {
-      this.addMonthFetched(monthInfo)
-      const { month, year } = monthInfo
-      console.log(`fetchEmployeesHoursByMonth(${month}/${year})`)
+  *fetchMonthsHours(monthInfo: MonthInfo): any {
+    if (this.monthAlreadyFetched(monthInfo)) return
 
-      const response = yield axios.get("/api/employees/hours/month", { params: monthInfo })
-      const hours: HourRow[] = response?.data
-      hours.forEach((row) =>
+    this.addMonthFetched(monthInfo)
+    const hours: HourRow[] = yield fetchHoursByMonth(monthInfo)
+    hours.forEach((row) =>
       this.employees[row.id].hours.set(row.date.slice(0, 10), row.hours))
-    }
   }
 
   private *initialize(): any {
@@ -61,13 +54,13 @@ export class DomainStore {
 
     // fetch the hours and add them
     const currentMonth = getCurrentMonthInfo()
-    yield this.fetchHoursByMonth(currentMonth)
+    yield this.fetchMonthsHours(currentMonth)
     this.addMonthFetched(currentMonth)
 
-    const lastMonth = getPreviousMonthInfo(currentMonth)
-    yield this.fetchHoursByMonth(lastMonth)
-    this.addMonthFetched(lastMonth)
-
     this.root.appStore.setCalendarIsLoading(false)
+
+    const lastMonth = getPreviousMonthInfo(currentMonth)
+    yield this.fetchMonthsHours(lastMonth)
+    this.addMonthFetched(lastMonth)
   }
 }

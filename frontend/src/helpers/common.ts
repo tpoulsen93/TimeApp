@@ -1,5 +1,7 @@
 import { MonthInfo } from "../../../types"
 
+const capitalizeWord = (word: string): string => word.charAt(0).toUpperCase() + word.slice(1)
+
 const getMonthInfo = (month: number, year: number): MonthInfo => ({ month, year })
 
 const getCurrentMonthInfo = (): MonthInfo => {
@@ -14,9 +16,11 @@ const getPreviousMonthInfo = (monthInfo: MonthInfo): MonthInfo => {
   return { month: previousMonth, year: previousMonthsYear }
 }
 
-const capitalizeWord = (word: string): string => word.charAt(0).toUpperCase() + word.slice(1)
-
 const formatDate = (day: number, month: number, year: number): string =>
-  year.toString() + "-" + month.toString().padStart(2, '0') + "-" + day.toString().padStart(2, '0')
+year.toString() + "-" + month.toString().padStart(2, '0') + "-" + day.toString().padStart(2, '0')
 
-export { capitalizeWord, getCurrentMonthInfo, getMonthInfo, getPreviousMonthInfo, formatDate }
+const monthsAreTheSame = (m1: MonthInfo, m2: MonthInfo): boolean => {
+  return m1.month === m2.month && m1.year === m2.year
+}
+
+export { capitalizeWord, getCurrentMonthInfo, getMonthInfo, getPreviousMonthInfo, formatDate, monthsAreTheSame }
