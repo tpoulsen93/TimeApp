@@ -1,13 +1,15 @@
 import { Pool } from "pg"
-import { Employee } from "../types"
+import { Employee, HourRow } from "../types"
 import { fetchEmployees } from "./dbRequestManager"
 
 type ServerState = {
   employees: Employee[],
+  monthOfHours: Record<string, HourRow[]>
 }
 
 const initialState: ServerState = {
-  employees: [] as Employee[]
+  employees: [] as Employee[],
+  monthOfHours: {}
 }
 
 const initState = async (pool: Pool) => {

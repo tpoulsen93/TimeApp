@@ -6,14 +6,13 @@ import cors from "cors"
 import { fetchEmployees, getHoursByMonth } from "./dbRequestManager";
 import { initState } from "./state"
 import { HourRow } from "types";
+import { getMonthInfoString } from "./common";
 
 const startServer = async (port: number) => {
   configureDotenv()
   const pool = new Pool({
     connectionString: process.env.PGURI,
-    ssl: {
-      rejectUnauthorized: false
-    }
+    ssl: { rejectUnauthorized: false },
   })
 
   const app: Express = express();
@@ -37,9 +36,21 @@ const startServer = async (port: number) => {
 
   app.get("/api/employees/hours/month", async (request: Request, response: Response) => {
     const { month, year } = request.query
-    console.log(`/api/employees/hours/month -> ${month}/${year}`)
+    const monthInfoString = getMonthInfoString(Number(month), Number(year))
+
+    // get the hours from the state if we have already fetched it
+    if (state.monthOfHours[monthInfoString]) {
+      console.log(`/api/employees/hours/month -> from cache: ${monthInfoString}`)
+      response.send(state.monthOfHours[monthInfoString])
+      return
+    }
+
+    console.log(`/api/employees/hours/month -> fetching: ${monthInfoString}`)
     const hours: HourRow[] =
       await getHoursByMonth(await pool.connect(), Number(month), Number(year))
+
+    // add hours to the cache
+    state.monthOfHours[monthInfoString] = hours
 
     response.send(hours)
   })
