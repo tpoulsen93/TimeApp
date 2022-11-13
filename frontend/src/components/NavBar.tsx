@@ -1,17 +1,17 @@
-import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@mui/material';
-import { Menu, Person } from '@mui/icons-material';
-import { useContext } from 'react';
-import { StoreContext } from '..';
-import { observer } from 'mobx-react-lite';
 import { action } from 'mobx';
+import { observer } from 'mobx-react-lite';
+import { Menu, Person } from '@mui/icons-material';
+import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@mui/material';
+import { useStores } from '..';
+import { getFullName } from '../helpers/common';
 
 const NavBar = () => {
-  const { appStore } = useContext(StoreContext)
+  const { appStore } = useStores()
   const { selectedEmployee, setEmployeeDrawerIsOpen } = appStore
 
   const currentEmployee = selectedEmployee === null
     ? <Person sx={{ color: "white" }} />
-    : selectedEmployee.fullName
+    : getFullName(selectedEmployee)
 
   const handleClick = action(() => setEmployeeDrawerIsOpen(true))
 

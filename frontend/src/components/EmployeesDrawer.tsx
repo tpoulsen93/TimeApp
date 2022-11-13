@@ -2,6 +2,7 @@ import { action } from "mobx"
 import { useContext } from "react"
 import { observer } from "mobx-react-lite"
 import { Divider, Drawer, List, ListItem, ListItemButton, Toolbar } from "@mui/material"
+import { getFullName } from "../helpers/common"
 import { StoreContext } from ".."
 import theme from "../theme"
 
@@ -34,7 +35,7 @@ const EmployeesDrawer = () => {
           .map((employee) =>
             <ListItem key={employee.id} sx={{ color: "white" }}>
               <ListItemButton onClick={action(() => setSelectedEmployee(employee))}>
-                {employee.fullName}
+                {getFullName(employee)}
               </ListItemButton>
             </ListItem>
         )}

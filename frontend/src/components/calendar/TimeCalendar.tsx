@@ -1,13 +1,13 @@
+import { action } from "mobx"
 import { makeStyles } from "@mui/styles"
 import { Calendar } from "react-calendar"
-import { useCallback, useContext, MouseEvent } from "react"
-import TileContent from "./TileContent"
-import { StoreContext } from "../.."
-import theme from "../../theme"
 import { observer } from "mobx-react-lite"
-import { action } from "mobx"
-import { getMonthInfo, getPreviousMonthInfo } from "../../helpers/common"
+import { useCallback, MouseEvent } from "react"
 import { Box, CircularProgress } from "@mui/material"
+import { getMonthInfo, getPreviousMonthInfo } from "../../helpers/common"
+import TileContent from "./TileContent"
+import { useStores } from "../.."
+import theme from "../../theme"
 
 const useStyles = makeStyles({
   calendar: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 })
 
 const TimeCalendar = () => {
-  const { domainStore, appStore } = useContext(StoreContext)
+  const { domainStore, appStore } = useStores()
   const { fetchMonthsHours, setCurrentMonth } = domainStore
   const { calendarIsLoading, setSelectedDate, setOptionsAnchorEl } = appStore
 
@@ -54,18 +54,21 @@ const TimeCalendar = () => {
       year={date.getFullYear()}
     />, [])
 
-  return (calendarIsLoading)
-    ? <CircularProgress color="info" size={100} thickness={2} sx={{ marginTop: 30 }}/>
-    : <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Calendar
-          view="month"
-          className={classes.calendar}
-          onActiveStartDateChange={handleActivateStartDateChange}
-          onClickDay={handleClickDay}
-          tileClassName={classes.tiles}
-          tileContent={tileContent}
-        />
-      </Box>
+  return (
+    <Box sx={{ display: "flex", justifyContent: "center" }}>
+      {calendarIsLoading
+        ? <CircularProgress color="info" size={100} thickness={2} sx={{ marginTop: 30 }}/>
+        : <Calendar
+            view="month"
+            className={classes.calendar}
+            onActiveStartDateChange={handleActivateStartDateChange}
+            onClickDay={handleClickDay}
+            tileClassName={classes.tiles}
+            tileContent={tileContent}
+          />
+      }
+    </Box>
+  )
 }
 
 export default observer(TimeCalendar)

@@ -6,7 +6,6 @@ type Employee = {
   phone: string
   email: string
   supervisorID: number
-  fullName: string
   hours: Map<string, number> // Map<date, hours>
 }
 
