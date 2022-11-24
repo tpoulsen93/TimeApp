@@ -2,8 +2,8 @@ import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { Menu, Person } from '@mui/icons-material';
 import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@mui/material';
-import { useStores } from '..';
 import { getFullName } from '../helpers/common';
+import { useStores } from '..';
 
 const NavBar = () => {
   const { appStore } = useStores()

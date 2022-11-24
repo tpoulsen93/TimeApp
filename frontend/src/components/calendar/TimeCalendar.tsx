@@ -25,7 +25,7 @@ const useStyles = makeStyles({
 const TimeCalendar = () => {
   const { domainStore, appStore } = useStores()
   const { fetchMonthsHours, setCurrentMonth } = domainStore
-  const { calendarIsLoading, setSelectedDate, setOptionsAnchorEl } = appStore
+  const { calendarIsLoading, selectedEmployee, setSelectedDate, setOptionsAnchorEl } = appStore
 
   const classes = useStyles()
 
@@ -44,7 +44,7 @@ const TimeCalendar = () => {
 
   const handleClickDay = action((date: Date, event: MouseEvent<HTMLButtonElement>) => {
     setSelectedDate(date)
-    setOptionsAnchorEl(event.currentTarget)
+    if (selectedEmployee) setOptionsAnchorEl(event.currentTarget)
   })
 
   const tileContent = useCallback(({ date }: { date: Date }) =>
