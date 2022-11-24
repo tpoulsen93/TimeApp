@@ -3,8 +3,8 @@ import { makeStyles } from "@mui/styles"
 import { observer } from "mobx-react-lite"
 import { ChangeEvent, MouseEvent, useCallback, useState } from "react"
 import { Box, Button, ClickAwayListener, Popover, TextField } from "@mui/material"
+import { convertDateToString, getFullName } from "../helpers/common"
 import { useStores } from ".."
-import { convertDateToString } from "../helpers/common"
 
 const useStyles = makeStyles({
   box: {
@@ -17,7 +17,7 @@ const useStyles = makeStyles({
 
 const EmployeeMenu = () => {
   const { appStore, domainStore } = useStores()
-  const { setSelectedDate, setOptionsAnchorEl, optionsAnchorEl, selectedDate, selectedEmployee } = appStore
+  const { optionsAnchorEl, selectedDate, selectedEmployee, setSnackbarMessage, setSnackbarIsOpen, setSelectedDate, setOptionsAnchorEl } = appStore
   const { submitHours } = domainStore
 
   const [hours, setHours] = useState<string>("")
@@ -32,14 +32,20 @@ const EmployeeMenu = () => {
     setHours(e.target.value)
   }, [])
 
-  const handleSubmit = useCallback(async (e: MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = action(async (e: MouseEvent<HTMLButtonElement>) => {
     if (!selectedEmployee) return
     closeOptions()
 
-    const response = await submitHours(selectedEmployee.id, convertDateToString(selectedDate!), parseFloat(hours))
-    alert(response)
+    const date = convertDateToString(selectedDate!)
+    setSnackbarMessage(`Submitting ${hours} hours for ${getFullName(selectedEmployee)} on ${date}`)
+    setSnackbarIsOpen(true)
+
+    const response = await submitHours(selectedEmployee.id, date, parseFloat(hours))
+    setSnackbarMessage(response)
+    setSnackbarIsOpen(true)
+
     setHours("")
-  }, [closeOptions, hours, selectedDate, selectedEmployee, submitHours])
+  })
 
   return (
     <Popover

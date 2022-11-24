@@ -13,8 +13,6 @@ const NavBar = () => {
     ? <Person sx={{ color: "white" }} />
     : getFullName(selectedEmployee)
 
-  const handleClick = action(() => setEmployeeDrawerIsOpen(true))
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" >
@@ -25,7 +23,7 @@ const NavBar = () => {
             color="inherit"
             aria-label="menu"
             sx={{ marginRight: 4 }}
-            onClick={handleClick}
+            onClick={action(() => setEmployeeDrawerIsOpen(true))}
           >
             <Menu />
           </IconButton>

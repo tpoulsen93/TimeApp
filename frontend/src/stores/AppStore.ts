@@ -10,6 +10,8 @@ export class AppStore {
   optionsAnchorEl: HTMLButtonElement | null
   selectedDate: Date | null
   selectedEmployee: Employee | null
+  snackbarMessage: string
+  snackbarIsOpen: boolean
 
   constructor(root: RootStore) {
     makeAutoObservable(this, { root: false }, { autoBind: true })
@@ -19,6 +21,8 @@ export class AppStore {
     this.optionsAnchorEl = null
     this.selectedDate = null
     this.selectedEmployee = null
+    this.snackbarMessage = ""
+    this.snackbarIsOpen = false
   }
 
   setEmployeeDrawerIsOpen(isOpen: boolean) {
@@ -39,5 +43,13 @@ export class AppStore {
 
   setSelectedDate(date: Date | null) {
     this.selectedDate = date
+  }
+
+  setSnackbarIsOpen(isOpen: boolean) {
+    this.snackbarIsOpen = isOpen
+  }
+
+  setSnackbarMessage(message: string) {
+    this.snackbarMessage = message
   }
 }

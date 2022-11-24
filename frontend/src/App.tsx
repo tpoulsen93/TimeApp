@@ -7,16 +7,24 @@ import EmployeeMenu from './components/EmployeeMenu'
 import NavBar from "./components/NavBar"
 import './helpers/calendar.css';
 import theme from './theme'
+import SubmissionSnackbar from './components/SubmissionSnackbar'
 
 const App = () => {
+  const appContainer = {
+    backgroundColor: theme.palette.primary.main,
+    margin: "-8px",
+    height: "100vh"
+  }
+
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ backgroundColor: theme.palette.primary.main, margin: "-8px", height: "100vh" }}>
+      <Box sx={appContainer}>
         <NavBar />
         <TimeCalendar />
       </Box>
       <EmployeeMenu />
       <EmployeesDrawer />
+      <SubmissionSnackbar />
     </ThemeProvider>
   )
 }
