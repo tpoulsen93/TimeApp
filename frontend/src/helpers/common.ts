@@ -17,20 +17,24 @@ const getPreviousMonthInfo = (monthInfo: MonthInfo): MonthInfo => {
 }
 
 const formatDate = (day: number, month: number, year: number): string =>
-year.toString() + "-" + month.toString().padStart(2, '0') + "-" + day.toString().padStart(2, '0')
+  year.toString() + "-" + month.toString().padStart(2, '0') + "-" + day.toString().padStart(2, '0')
 
-const monthsAreTheSame = (m1: MonthInfo, m2: MonthInfo): boolean => {
-  return m1.month === m2.month && m1.year === m2.year
-}
+const convertDateToString = (date: Date): string =>
+  formatDate(date.getDate(), date.getMonth()+1, date.getFullYear())
 
-const getFullName = (employee: Employee) => `${capitalizeWord(employee.firstName)} ${capitalizeWord(employee.lastName)}`
+const monthsAreTheSame = (m1: MonthInfo, m2: MonthInfo): boolean =>
+  m1.month === m2.month && m1.year === m2.year
+
+const getFullName = (employee: Employee) =>
+  `${capitalizeWord(employee.firstName)} ${capitalizeWord(employee.lastName)}`
 
 export {
   capitalizeWord,
+  convertDateToString,
   getCurrentMonthInfo,
+  getFullName,
   getMonthInfo,
   getPreviousMonthInfo,
   formatDate,
   monthsAreTheSame,
-  getFullName
 }

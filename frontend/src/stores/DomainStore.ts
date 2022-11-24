@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { getCurrentMonthInfo, getPreviousMonthInfo, monthsAreTheSame } from "../helpers/common";
-import { fetchEmployees, fetchHoursByMonth } from "../requests/serverRequests";
-import { Employee, HourRow, MonthInfo } from "../../../types";
+import { fetchEmployees, fetchHoursByMonth, submitDayHours } from "../requests/serverRequests";
+import { Employee, HourRow, HoursSubmissionResult, MonthInfo } from "../../../types";
 import { RootStore } from "./RootStore";
 
 export class DomainStore {
@@ -43,6 +43,14 @@ export class DomainStore {
     const hours: HourRow[] = yield fetchHoursByMonth(monthInfo)
     hours.forEach((row) =>
       this.employees[row.id].hours.set(row.date.slice(0, 10), row.hours))
+  }
+
+  *submitHours(id: number, date: string, hours: number): any {
+   const response: HoursSubmissionResult = yield submitDayHours(id, date, hours)
+   console.log(response.message)
+
+    if (response.result) this.employees[id].hours.set(date, hours)
+    return response.message
   }
 
   private *initialize(): any {

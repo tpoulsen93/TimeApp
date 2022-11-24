@@ -1,4 +1,3 @@
-
 type Employee = {
   id: number
   firstName: string
@@ -15,9 +14,14 @@ type HourRow = {
   id: number
 }
 
+type HoursSubmissionResult = {
+  message: string
+  result: boolean
+}
+
 type MonthInfo = {
   month: number
   year: number
 }
 
-export type { Employee, HourRow, MonthInfo }
+export type { Employee, HourRow, HoursSubmissionResult, MonthInfo }
